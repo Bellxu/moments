@@ -1,57 +1,35 @@
-package com.dajj.moment;
+package com.dajj.moment.activity;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
+import com.dajj.moment.R;
 import com.dajj.moment.utils.getPhotoFromPhotoAlbum;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class Mainactivity2 extends Activity implements View.OnClickListener {
+public class TakePhotoActivity extends Activity implements View.OnClickListener {
 
 
     private ImageView ivTest;
@@ -122,14 +100,14 @@ public class Mainactivity2 extends Activity implements View.OnClickListener {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            uri = FileProvider.getUriForFile(Mainactivity2.this, Mainactivity2.this
+            uri = FileProvider.getUriForFile(TakePhotoActivity.this, TakePhotoActivity.this
                     .getPackageName() + ".provider", cameraSavePath);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } else {
             uri = Uri.fromFile(cameraSavePath);
         }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        Mainactivity2.this.startActivityForResult(intent, 1);
+        TakePhotoActivity.this.startActivityForResult(intent, 1);
     }
 
 
@@ -163,11 +141,11 @@ public class Mainactivity2 extends Activity implements View.OnClickListener {
                 photoPath = uri.getEncodedPath();
             }
             Log.d("拍照返回图片路径:", photoPath);
-            Glide.with(Mainactivity2.this).load(photoPath).into(ivTest);
+            Glide.with(TakePhotoActivity.this).load(photoPath).into(ivTest);
             sendpic(photoPath);
         } else if (requestCode == 2 && resultCode == RESULT_OK) {
             photoPath = getPhotoFromPhotoAlbum.getRealPathFromUri(this, data.getData());
-            Glide.with(Mainactivity2.this).load(photoPath).into(ivTest);
+            Glide.with(TakePhotoActivity.this).load(photoPath).into(ivTest);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -181,13 +159,13 @@ public class Mainactivity2 extends Activity implements View.OnClickListener {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Toast.makeText(Mainactivity2.this, "发送成功", Toast.LENGTH_LONG).show();
+                        Toast.makeText(TakePhotoActivity.this, "发送成功", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        Toast.makeText(Mainactivity2.this, "发送失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(TakePhotoActivity.this, "发送失败", Toast.LENGTH_LONG).show();
                     }
                 });
 
