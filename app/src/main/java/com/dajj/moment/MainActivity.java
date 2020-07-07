@@ -11,12 +11,16 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.VerifiedKeyEvent;
 import android.view.View;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     private static final int TAKE_PHOTO = 1;
     private Uri imageUrl;
+    private int MY_ADD_CASE_CALL_PHONE = 0001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +30,15 @@ public class MainActivity extends AppCompatActivity {
         take_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED)) {
-                    ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},1);
-                }else {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MY_ADD_CASE_CALL_PHONE);
+                } else {
+                    //有权限,去打开摄像头
                     takePhoto();
                 }
-
             }
         });
     }
@@ -63,10 +70,10 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 1:
-                if (grantResults.length>0&&grantResults[0]== PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
-                }else {
-                    Toast.makeText(this,"不要拒绝啊",Toast.LENGTH_SHORT);
+                } else {
+                    Toast.makeText(this, "不要拒绝啊", Toast.LENGTH_SHORT);
                 }
                 break;
             default:
