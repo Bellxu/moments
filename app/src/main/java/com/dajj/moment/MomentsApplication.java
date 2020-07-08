@@ -6,7 +6,7 @@ import androidx.multidex.MultiDex;
 
 import com.lzy.okgo.OkGo;
 
-public class DajiApplication extends Application {
+public class MomentsApplication extends Application {
 
 
     @Override

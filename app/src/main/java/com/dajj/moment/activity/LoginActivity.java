@@ -1,6 +1,8 @@
 package com.dajj.moment.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +20,7 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
     private TextView logon;
     private EditText edit1;
     private EditText edit2;
-    private boolean isPasswordLogin=false;
+    private boolean isPasswordLogin = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
     }
 
     private void initView() {
+
         login = findViewById(R.id.login);
         password_login = findViewById(R.id.password_login);
         logon = findViewById(R.id.logon);
@@ -36,6 +39,15 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
         login.setOnClickListener(this);
         password_login.setOnClickListener(this);
         logon.setOnClickListener(this);
+        initDefault();
+    }
+
+    private void initDefault() {
+        isPasswordLogin = false;
+        edit1.setEnabled(false);
+        edit1.setText("+86");
+        edit2.setHint("请输入手机号");
+        login.setText("获取验证码");
     }
 
     @Override
@@ -55,7 +67,26 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
     }
 
     private void ChangeToPasswordLogin() {
-        isPasswordLogin=true;
+        if (isPasswordLogin) {
+            isPasswordLogin = false;
+            edit1.setEnabled(false);
+            edit1.setText("+86");
+            edit2.setHint(R.string.input_phone_number_tip);
+            login.setText(R.string.get_verify_code);
+        } else {
+            isPasswordLogin = true;
+            edit1.setEnabled(true);
+            edit1.setHint("账号/手机/邮箱");
+            if (!TextUtils.isEmpty(edit2.getText())) {
+                edit1.setText(edit2.getText());
+            } else {
+                edit1.setText("");
+            }
+            edit2.setHint(R.string.input_password);
+            edit2.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            login.setText(R.string.login);
+        }
+
 
     }
 
@@ -66,13 +97,15 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
         goToLogOn();
     }
 
+    //注册
     private void goToLogOn() {
 
     }
 
+    // 登陆
     private void doLogin() {
         if (!isPasswordLogin) {
-            
+            String phoneNumber = edit2.getText().toString();
         }
 
     }
