@@ -1,8 +1,11 @@
 package com.dajj.moment.activity;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +42,27 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
         login.setOnClickListener(this);
         password_login.setOnClickListener(this);
         logon.setOnClickListener(this);
+        edit2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length()>0) {
+                    login.setEnabled(true);
+                }else{
+                    login.setEnabled(false);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         initDefault();
     }
 
@@ -48,6 +72,7 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
         edit1.setText("+86");
         edit2.setHint("请输入手机号");
         login.setText("获取验证码");
+        login.setEnabled(false);
     }
 
     @Override
