@@ -4,6 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.LogonActivity">
+
+    <EditText
+        android:hint="账号或者邮箱"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </EditText>
+    <EditText
+        android:hint="输入密码"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </EditText>
+    <EditText
+        android:hint="再次确认密码"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </EditText>
 
 </LinearLayout>

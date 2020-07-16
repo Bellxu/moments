@@ -5,8 +5,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.dajj.moment.net.client.login.BearerToken;
+
 public class TokenStore {
+    private static TokenStore instance;
     private final SharedPreferences prefs;
+
+
+    public static TokenStore getInstance (Context context){
+        if (instance==null) {
+            instance =new TokenStore(context);
+        }
+        return instance;
+
+    }
 
     public TokenStore(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -20,6 +32,13 @@ public class TokenStore {
         editor.putString("token_type", accessToken.getTokenType());
         editor.putLong("expires_in", accessToken.getExpiresIn());
         editor.putLong("issued_at", accessToken.getIssuedAt());
+        editor.commit();
+    }
+
+    public void save(BearerToken bearerToken) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("bearer_token", bearerToken.getAccessToken());
+        editor.putString("bearer_token_type", bearerToken.getTokenType());
         editor.commit();
     }
 
@@ -46,6 +65,16 @@ public class TokenStore {
             token.setExpiresIn(prefs.getLong("expires_in", -1)); // prevents / 0
             token.setIssuedAt(prefs.getLong("issued_at", -1)); // prevents / 0
         }
+        return token;
+    }
+
+
+    public BearerToken getBearerToken() {
+        BearerToken token = new BearerToken();
+        String bearerToken = prefs.getString("bearer_token", "");
+        String bearer_token_type = prefs.getString("bearer_token_type", "");
+        token.setAccessToken(bearerToken);
+        token.setTokenType(bearer_token_type);
         return token;
     }
 }

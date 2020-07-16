@@ -21,10 +21,10 @@ public class DataGenerator {
 
     public static Fragment[] getFragments(String from){
         Fragment fragments[] = new Fragment[4];
-        fragments[0] = HomeFragment.newInstance(from);
-        fragments[1] = DiscoveryFragment.newInstance(from);
-        fragments[2] = AttentionFragment.newInstance(from);
-        fragments[3] = ProfileFragment.newInstance(from);
+        fragments[0] = HomeFragment.newInstance();
+        fragments[1] = DiscoveryFragment.newInstance();
+        fragments[2] = AttentionFragment.newInstance();
+        fragments[3] = ProfileFragment.newInstance();
         return fragments;
     }
 

@@ -7,22 +7,29 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
+import android.text.method.SingleLineTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 
 import com.dajj.moment.R;
+import com.dajj.moment.net.client.ClientAPI;
+import com.dajj.moment.net.client.login.BearerToken;
+import com.dajj.moment.net.client.login.UserLogin;
 import com.dajj.moment.net.client.oauth2.AccessToken;
 import com.dajj.moment.net.client.oauth2.AuthorizationRequest;
 import com.dajj.moment.net.client.oauth2.OAuth2StateManager;
 import com.dajj.moment.net.client.oauth2.TokenStore;
-
 import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends BaseActvity implements View.OnClickListener {
 
@@ -138,6 +145,7 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
             edit1.setEnabled(false);
             edit1.setText("+86");
             edit2.setHint(R.string.input_phone_number_tip);
+            edit2.setTransformationMethod(SingleLineTransformationMethod.getInstance());
             login.setText(R.string.get_verify_code);
         } else {
             isPasswordLogin = true;
@@ -148,6 +156,7 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
             } else {
                 edit1.setText("");
             }
+            edit2.setText("");
             edit2.setHint(R.string.input_password);
             edit2.setTransformationMethod(PasswordTransformationMethod.getInstance());
             login.setText(R.string.login);
@@ -168,11 +177,58 @@ public class LoginActivity extends BaseActvity implements View.OnClickListener {
 
     }
 
+    private UserLogin getLoginInfo() {
+        UserLogin userLogin = new UserLogin();
+        userLogin.setPrincipal(edit1.getText().toString());
+        userLogin.setCredentials(edit2.getText().toString());
+        userLogin.setType("email");
+        return userLogin;
+    }
+
     // 登陆
     private void doLogin() {
         if (!isPasswordLogin) {
             String phoneNumber = edit2.getText().toString();
         }
+        gotoLogin();
+    }
+
+    private void gotoLogin() {
+        {
+            UserLogin loginInfo = getLoginInfo();
+            Call<BearerToken> call = ClientAPI.login().requestToken(loginInfo);
+
+            call.enqueue(new Callback<BearerToken>() {
+                @Override
+                public void onResponse(Call<BearerToken> call, Response<BearerToken> response) {
+                    if (response.code()==200) {
+                        BearerToken token = response.body();
+                        Log.v("test--",token.toString()+"code=="+response.code());
+                        TokenStore tokenStore = new TokenStore(LoginActivity.this);
+                        tokenStore.save(token);
+//                        Toast.makeText(LoginActivity.this, token.toString()+"code=="+response.code(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this,
+                                HomeActivity.class);
+                        intent.putExtra("login_type","native");
+                        startActivity(intent);
+                        finish();
+                    }else {
+                        Toast.makeText(LoginActivity.this, "code=="+response.code(), Toast.LENGTH_SHORT).show();
+                        Log.v("test--","code=="+response.code());
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<BearerToken> call, Throwable t) {
+                    Log.v("test--","onFailure" );
+                    Toast.makeText(LoginActivity.this, "onFailure t=="+t.toString(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
 
     }
+
+
 }

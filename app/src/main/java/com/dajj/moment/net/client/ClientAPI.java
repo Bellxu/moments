@@ -2,6 +2,7 @@ package com.dajj.moment.net.client;
 
 
 import com.dajj.moment.net.client.interceptor.OAuth2ClientAuthenticationInterceptor;
+import com.dajj.moment.net.client.login.LoginAPI;
 import com.dajj.moment.net.client.oauth2.OAuth2API;
 import com.dajj.moment.net.client.userinfo.UserInfoAPI;
 
@@ -11,6 +12,11 @@ public class ClientAPI {
     public static UserInfoAPI userInfo() {
         RetrofitAPIFactory api = new RetrofitAPIFactory(BASE_URL, null);
         return api.getRetrofit().create(UserInfoAPI.class);
+    }
+
+    public static LoginAPI login() {
+        RetrofitAPIFactory api = new RetrofitAPIFactory(BASE_URL, null);
+        return api.getRetrofit().create(LoginAPI.class);
     }
 
     public static OAuth2API oauth2() {

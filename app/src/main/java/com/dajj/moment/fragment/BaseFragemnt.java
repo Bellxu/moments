@@ -2,9 +2,13 @@ package com.dajj.moment.fragment;
 
 import androidx.fragment.app.Fragment;
 
-public class BaseFragemnt extends Fragment {
-    public static Fragment newInstance(String from) {
+public abstract class BaseFragemnt extends Fragment {
 
-        return new BaseFragemnt();
-    }
+
+
+    public abstract void refresh();
+
+    public abstract <E>void setData(E e);
+
+
 }
