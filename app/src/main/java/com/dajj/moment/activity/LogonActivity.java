@@ -1,4 +1,4 @@
-﻿package com.dajj.moment.activity;
+package com.dajj.moment.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
